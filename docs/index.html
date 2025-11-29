@@ -6,7 +6,7 @@
         <title>Documentation – ahai</title>
         <meta
             name="description"
-            content="Documentation for ahai - surface forward-looking concepts from your markdown files using local AI on Apple Silicon."
+            content="Documentation for ahai - find the ideas scattered across your markdown files using local AI on Apple Silicon."
         />
         <style>
             :root {
@@ -462,9 +462,10 @@
             <main class="main">
                 <h1>ahai Documentation</h1>
                 <p class="intro">
-                    ahai scans your markdown files and surfaces forward-looking
-                    concepts—ideas you've captured for later action. Everything
-                    runs locally on your Apple Silicon Mac using MLX.
+                    ahai finds the core ideas scattered across your markdown
+                    files—in Obsidian vaults, repo READMEs, clipped content,
+                    and more. Everything runs locally on your Apple Silicon Mac
+                    using MLX.
                 </p>
 
                 <section id="getting-started">
@@ -631,8 +632,9 @@
                             What are the system requirements?
                         </p>
                         <p class="faq-answer">
-                            An Apple Silicon Mac (M1, M2, M3, or M4) running
-                            macOS 13 Ventura or later.
+                            An Apple Silicon Mac (M1, M2, M3, or M4) with
+                            <strong>minimum 16GB RAM</strong>, running macOS 13
+                            Ventura or later. Intel Macs are not supported.
                         </p>
                     </div>
 
@@ -663,6 +665,31 @@
                             In <code>~/Library/Application Support/ahai/</code>
                         </p>
                     </div>
+
+                    <div class="faq-item">
+                        <p class="faq-question">
+                            What AI models can I use?
+                        </p>
+                        <p class="faq-answer">
+                            ahai works with any mlx_lm compatible model that fits
+                            on your machine. Models are downloaded to your configured
+                            HuggingFace cache location. For good performance, the model
+                            should be roughly ≤ half your system RAM. If you're not
+                            familiar with mlx models, a default model is downloaded
+                            automatically.
+                        </p>
+                    </div>
+
+                    <div class="faq-item">
+                        <p class="faq-question">
+                            Is the output 100% accurate?
+                        </p>
+                        <p class="faq-answer">
+                            ahai contains AI-generated content, so use with caution.
+                            The AI surfaces candidates; you decide what matters.
+                            Your judgment is the final filter.
+                        </p>
+                    </div>
                 </section>
 
                 <section id="troubleshooting">
@@ -671,8 +698,8 @@
                     <h3>App won't launch</h3>
                     <p>
                         Verify you're running an Apple Silicon Mac (M1/M2/M3/M4)
-                        with macOS 13 Ventura or later. Intel Macs are not
-                        supported.
+                        with <strong>minimum 16GB RAM</strong> and macOS 13 Ventura
+                        or later. Intel Macs are not supported.
                     </p>
                     <p>
                         When Gatekeeper blocks the app, right-click the ahai

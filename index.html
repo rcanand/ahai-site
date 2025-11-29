@@ -6,7 +6,7 @@
         <title>ahai – Rediscover what you meant to do</title>
         <meta
             name="description"
-            content="ahai scans your markdown files and surfaces ideas you captured for later but never acted on. Local AI on Apple Silicon, completely private."
+            content="ahai brings together the ideas scattered across your files so you can review them and act on them. Completely local, private Mac desktop app for Apple Silicon."
         />
         <style>
             :root {
@@ -536,12 +536,11 @@
                         <img src="logo.jpg" alt="ahai logo" />
                     </div>
                     <div class="tagline">For Mac • Apple Silicon</div>
-                    <h1>Rediscover what you<br />meant to do</h1>
+                    <h1>Find the ideas scattered<br />across your files</h1>
                     <p class="lead">
-                        ahai scans your markdown files and surfaces ideas you
-                        captured for later but never acted on—unbuilt features,
-                        unwritten content, unexplored research questions buried
-                        in your notes.
+                        ahai is a completely local, private Mac desktop app that
+                        brings together the ideas scattered across your files—so
+                        you can review them and act on them.
                     </p>
                     <div class="hero-buttons">
                         <a
@@ -596,30 +595,23 @@
                 </div>
             </section>
 
-            <!-- Problem -->
+            <!-- Who is it for -->
             <section class="problem">
                 <div class="container">
                     <div class="problem-content">
-                        <h2>
-                            Your notes are full of<br />"someday" and "maybe"
-                        </h2>
+                        <h2>Who is ahai for?</h2>
                         <p>
-                            You're diligent about capturing ideas. Feature
-                            concepts, blog post drafts, research threads, things
-                            to explore when you have time. They go into your
-                            notes, tagged or linked, filed away with good
-                            intentions.
+                            Engineers, product managers, researchers, scientists—anyone
+                            who wants to find and surface ideas on their own machines.
                         </p>
                         <blockquote>
-                            "I should try building that..." "Would be
-                            interesting to explore..." "TODO: come back to this"
+                            Ideas captured in prototypes, partial git repos, notes
+                            jotted down over the years—waiting to be rediscovered.
                         </blockquote>
                         <p>
-                            But your note collection grows. Those
-                            forward-looking ideas get buried under meeting
-                            notes, project docs, and daily logs. The promising
-                            threads fade into the archive. Six months later, you
-                            rediscover them by accident—or you don't.
+                            AI-assisted experiences are reaching a critical threshold
+                            where we can build, learn, and research at unprecedented
+                            speed. The question is: what should you work on next?
                         </p>
                     </div>
                 </div>
@@ -629,21 +621,29 @@
             <section class="solution">
                 <div class="container">
                     <div class="solution-content">
-                        <h2>Surface what's been waiting</h2>
+                        <h2>Find the core ideas hidden in your files</h2>
                         <p>
-                            ahai uses local AI to read your markdown files and
-                            identify forward-looking concepts—ideas, intentions,
-                            and possibilities you captured but never acted on.
-                            It understands context, not just keywords. "Might be
-                            worth exploring" gets surfaced. Meeting minutes
-                            don't.
+                            ahai uses local AI models (MLX on Mac) to sift through
+                            markdown files and find the ideas hidden in them.
+                            It understands context, not just keywords.
                         </p>
                         <p style="margin-top: 24px">
-                            Point it at your Obsidian vault, a GitHub repo, or
-                            any folder of markdown. In minutes, you'll have a
-                            curated list of your own forgotten ideas, ready to
-                            review, organize, and finally do something with.
+                            <strong>Optimized for:</strong>
                         </p>
+                        <ul style="text-align: left; max-width: 500px; margin: 16px auto; color: var(--text-muted);">
+                            <li>Code repository markdown READMEs in your repos folder</li>
+                            <li>Obsidian (or other markdown-based) notetaking app folders</li>
+                            <li>Clipped web content (like Obsidian Web Clipper saves)</li>
+                        </ul>
+                        <p style="margin-top: 24px">
+                            <strong>Use cases:</strong>
+                        </p>
+                        <ul style="text-align: left; max-width: 500px; margin: 16px auto; color: var(--text-muted);">
+                            <li>Consolidate ideas from past incomplete projects</li>
+                            <li>Surface ideas jotted down in notes over the years</li>
+                            <li>Gather ideas from meta-repos like awesome lists</li>
+                            <li>Find ideas from clipped tweets and arxiv papers</li>
+                        </ul>
                     </div>
                 </div>
             </section>
@@ -699,11 +699,11 @@
                                     <polyline points="14 2 14 8 20 8" />
                                 </svg>
                             </div>
-                            <h3>Works with Your Tools</h3>
+                            <h3>Markdown Focused</h3>
                             <p>
-                                Compatible with Obsidian vaults, GitHub repos,
-                                or any folder of markdown files. No config
-                                needed.
+                                Scans Obsidian vaults, repo READMEs, clipped
+                                content, or any folder of markdown files.
+                                Just point and scan.
                             </p>
                         </div>
                         <div class="feature-card">
@@ -721,11 +721,11 @@
                                     <polyline points="12 6 12 12 16 14" />
                                 </svg>
                             </div>
-                            <h3>Session Management</h3>
+                            <h3>Pause &amp; Resume</h3>
                             <p>
-                                Pause and resume scans anytime. Pick up where
-                                you left off without re-processing your entire
-                                vault.
+                                Processing takes time for large folders. Pause
+                                and resume anytime—pick up where you left off
+                                without re-processing.
                             </p>
                         </div>
                         <div class="feature-card">
@@ -835,6 +835,27 @@
                                 alt="Hide and unhide ideas"
                             />
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Requirements -->
+            <section class="solution" id="requirements">
+                <div class="container">
+                    <div class="solution-content">
+                        <h2>Requirements &amp; Notes</h2>
+                        <ul style="text-align: left; max-width: 600px; margin: 0 auto; color: var(--text-muted); line-height: 1.8;">
+                            <li><strong>Mac with Apple Silicon</strong> (M1 or later) with minimum 16GB RAM required</li>
+                            <li>Currently reads <strong>markdown files only</strong>—more formats based on demand</li>
+                            <li>Uses <strong>MLX</strong>—Apple's optimized AI model framework for Apple Silicon</li>
+                            <li>Works with any mlx_lm compatible model that fits on your machine</li>
+                            <li>Model should be roughly ≤ half your system RAM for reasonable speed</li>
+                            <li>Processing time depends on folder size—you can pause and resume anytime</li>
+                            <li>Contains AI-generated content—use with caution</li>
+                        </ul>
+                        <p style="margin-top: 32px; font-size: 0.875rem; color: var(--text-subtle);">
+                            ahai = aha (ideas) + h (human) + ai (AI)
+                        </p>
                     </div>
                 </div>
             </section>
