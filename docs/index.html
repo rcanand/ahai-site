@@ -8,6 +8,24 @@
             name="description"
             content="Documentation for ahai - find the ideas scattered across your markdown files using local AI on Apple Silicon."
         />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-touch-icon.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/favicon-32x32.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
         <style>
             :root {
                 --bg: #fafafa;
@@ -463,8 +481,8 @@
                 <h1>ahai Documentation</h1>
                 <p class="intro">
                     ahai finds the core ideas scattered across your markdown
-                    files—in Obsidian vaults, repo READMEs, clipped content,
-                    and more. Everything runs locally on your Apple Silicon Mac
+                    files—in Obsidian vaults, repo READMEs, clipped content, and
+                    more. Everything runs locally on your Apple Silicon Mac
                     using MLX.
                 </p>
 
@@ -667,27 +685,23 @@
                     </div>
 
                     <div class="faq-item">
-                        <p class="faq-question">
-                            What AI models can I use?
-                        </p>
+                        <p class="faq-question">What AI models can I use?</p>
                         <p class="faq-answer">
-                            ahai works with any mlx_lm compatible model that fits
-                            on your machine. Models are downloaded to your configured
-                            HuggingFace cache location. For good performance, the model
-                            should be roughly ≤ half your system RAM. If you're not
-                            familiar with mlx models, a default model is downloaded
-                            automatically.
+                            ahai works with any mlx_lm compatible model that
+                            fits on your machine. Models are downloaded to your
+                            configured HuggingFace cache location. For good
+                            performance, the model should be roughly ≤ half your
+                            system RAM. If you're not familiar with mlx models,
+                            a default model is downloaded automatically.
                         </p>
                     </div>
 
                     <div class="faq-item">
-                        <p class="faq-question">
-                            Is the output 100% accurate?
-                        </p>
+                        <p class="faq-question">Is the output 100% accurate?</p>
                         <p class="faq-answer">
-                            ahai contains AI-generated content, so use with caution.
-                            The AI surfaces candidates; you decide what matters.
-                            Your judgment is the final filter.
+                            ahai contains AI-generated content, so use with
+                            caution. The AI surfaces candidates; you decide what
+                            matters. Your judgment is the final filter.
                         </p>
                     </div>
                 </section>
@@ -698,8 +712,8 @@
                     <h3>App won't launch</h3>
                     <p>
                         Verify you're running an Apple Silicon Mac (M1/M2/M3/M4)
-                        with <strong>minimum 16GB RAM</strong> and macOS 13 Ventura
-                        or later. Intel Macs are not supported.
+                        with <strong>minimum 16GB RAM</strong> and macOS 13
+                        Ventura or later. Intel Macs are not supported.
                     </p>
                     <p>
                         When Gatekeeper blocks the app, right-click the ahai
