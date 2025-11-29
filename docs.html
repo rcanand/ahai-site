@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Documentation – ahai</title>
+        <meta
+            name="description"
+            content="Documentation for ahai - surface forward-looking concepts from your markdown files using local AI on Apple Silicon."
+        />
+        <style>
+            :root {
+                --bg: #fafafa;
+                --bg-sidebar: #f3f3f3;
+                --text: #1a1a1a;
+                --text-muted: #666;
+                --border: #e0e0e0;
+                --accent: #0066cc;
+                --accent-hover: #0052a3;
+                --code-bg: #f0f0f0;
+                --nav-active-bg: #e8e8e8;
+                --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                    Helvetica, Arial, sans-serif;
+                --font-mono: "SF Mono", SFMono-Regular, ui-monospace, Menlo,
+                    Monaco, monospace;
+            }
+
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --bg: #111;
+                    --bg-sidebar: #1a1a1a;
+                    --text: #e8e8e8;
+                    --text-muted: #999;
+                    --border: #333;
+                    --accent: #4da3ff;
+                    --accent-hover: #7ab8ff;
+                    --code-bg: #222;
+                    --nav-active-bg: #2a2a2a;
+                }
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+
+            html {
+                scroll-behavior: smooth;
+                scroll-padding-top: 2rem;
+            }
+
+            body {
+                margin: 0;
+                font-family: var(--font-sans);
+                font-size: 16px;
+                line-height: 1.6;
+                color: var(--text);
+                background: var(--bg);
+                -webkit-font-smoothing: antialiased;
+            }
+
+            a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+
+            a:hover {
+                color: var(--accent-hover);
+                text-decoration: underline;
+            }
+
+            /* Header */
+            .header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 56px;
+                background: var(--bg-sidebar);
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                align-items: center;
+                padding: 0 1.5rem;
+                z-index: 100;
+            }
+
+            .header-brand {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: var(--text);
+                text-decoration: none;
+            }
+
+            .header-brand:hover {
+                color: var(--text);
+                text-decoration: none;
+            }
+
+            .header-brand svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .header-nav {
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+            .header-link {
+                font-size: 0.875rem;
+                color: var(--text-muted);
+            }
+
+            .header-link:hover {
+                color: var(--text);
+            }
+
+            .mobile-menu-btn {
+                display: none;
+                background: none;
+                border: none;
+                padding: 0.5rem;
+                cursor: pointer;
+                color: var(--text);
+            }
+
+            .mobile-menu-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            /* Layout */
+            .layout {
+                display: flex;
+                padding-top: 56px;
+                min-height: 100vh;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                position: fixed;
+                top: 56px;
+                left: 0;
+                bottom: 0;
+                width: 260px;
+                background: var(--bg-sidebar);
+                border-right: 1px solid var(--border);
+                overflow-y: auto;
+                padding: 1.5rem 0;
+            }
+
+            .sidebar-section {
+                margin-bottom: 1.5rem;
+            }
+
+            .sidebar-title {
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--text-muted);
+                padding: 0 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .sidebar-nav {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar-nav a {
+                display: block;
+                padding: 0.5rem 1.5rem;
+                font-size: 0.9375rem;
+                color: var(--text-muted);
+                text-decoration: none;
+                transition: background 0.15s, color 0.15s;
+            }
+
+            .sidebar-nav a:hover {
+                color: var(--text);
+                background: var(--nav-active-bg);
+                text-decoration: none;
+            }
+
+            .sidebar-nav a.active {
+                color: var(--accent);
+                background: var(--nav-active-bg);
+                font-weight: 500;
+            }
+
+            /* Main content */
+            .main {
+                flex: 1;
+                margin-left: 260px;
+                padding: 2.5rem 3rem 4rem;
+                max-width: 800px;
+            }
+
+            .main h1 {
+                font-size: 2rem;
+                font-weight: 700;
+                margin: 0 0 1.5rem;
+                letter-spacing: -0.02em;
+            }
+
+            .main h2 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin: 3rem 0 1rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid var(--border);
+                letter-spacing: -0.01em;
+            }
+
+            .main h2:first-of-type {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
+
+            .main h3 {
+                font-size: 1.125rem;
+                font-weight: 600;
+                margin: 2rem 0 0.75rem;
+                color: var(--text);
+            }
+
+            .main p {
+                margin: 0 0 1rem;
+                color: var(--text);
+            }
+
+            .main ul,
+            .main ol {
+                margin: 0 0 1rem;
+                padding-left: 1.5rem;
+            }
+
+            .main li {
+                margin-bottom: 0.5rem;
+            }
+
+            .main code {
+                font-family: var(--font-mono);
+                font-size: 0.875em;
+                background: var(--code-bg);
+                padding: 0.2em 0.4em;
+                border-radius: 4px;
+            }
+
+            .main pre {
+                background: var(--code-bg);
+                padding: 1rem;
+                border-radius: 6px;
+                overflow-x: auto;
+                margin: 0 0 1rem;
+            }
+
+            .main pre code {
+                background: none;
+                padding: 0;
+            }
+
+            /* FAQ items */
+            .faq-item {
+                margin-bottom: 1.5rem;
+            }
+
+            .faq-question {
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: var(--text);
+            }
+
+            .faq-answer {
+                color: var(--text-muted);
+                margin: 0;
+            }
+
+            /* Intro text */
+            .intro {
+                font-size: 1.125rem;
+                color: var(--text-muted);
+                margin-bottom: 2rem;
+            }
+
+            /* Step indicators */
+            .step {
+                margin-bottom: 1.5rem;
+            }
+
+            .step-title {
+                font-weight: 600;
+                margin-bottom: 0.25rem;
+            }
+
+            .step-desc {
+                color: var(--text-muted);
+                margin: 0;
+            }
+
+            /* Section targets for scroll */
+            section[id] {
+                scroll-margin-top: 80px;
+            }
+
+            /* Mobile overlay */
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 49;
+            }
+
+            /* Mobile styles */
+            @media (max-width: 768px) {
+                .header-nav .header-link:not(:first-child) {
+                    display: none;
+                }
+
+                .mobile-menu-btn {
+                    display: block;
+                    margin-left: auto;
+                }
+
+                .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    z-index: 50;
+                }
+
+                .sidebar.open {
+                    transform: translateX(0);
+                }
+
+                .sidebar-overlay.open {
+                    display: block;
+                }
+
+                .main {
+                    margin-left: 0;
+                    padding: 2rem 1.25rem 3rem;
+                }
+
+                .main h1 {
+                    font-size: 1.75rem;
+                }
+
+                .main h2 {
+                    font-size: 1.25rem;
+                }
+            }
+
+            /* Smooth section visibility for nav highlighting */
+            @media (min-width: 769px) {
+                .mobile-menu-btn {
+                    display: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header class="header">
+            <a href="https://ahai.app" class="header-brand">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v6l4 2" />
+                </svg>
+                ahai
+            </a>
+            <nav class="header-nav">
+                <a href="https://ahai.app" class="header-link">Home</a>
+                <a href="#getting-started" class="header-link">Docs</a>
+            </nav>
+            <button
+                class="mobile-menu-btn"
+                aria-label="Toggle menu"
+                onclick="toggleSidebar()"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+        </header>
+
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <div class="layout">
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Getting Started</div>
+                    <ul class="sidebar-nav">
+                        <li><a href="#installation">Installation</a></li>
+                        <li><a href="#first-launch">First Launch</a></li>
+                        <li>
+                            <a href="#starting-a-session">Starting a Session</a>
+                        </li>
+                        <li>
+                            <a href="#understanding-results"
+                                >Understanding Results</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Features Guide</div>
+                    <ul class="sidebar-nav">
+                        <li>
+                            <a href="#session-management">Session Management</a>
+                        </li>
+                        <li><a href="#drag-drop">Drag-Drop Organization</a></li>
+                        <li><a href="#hide-items">Hide Items</a></li>
+                        <li>
+                            <a href="#search-filter">Search &amp; Filter</a>
+                        </li>
+                        <li><a href="#export">Export</a></li>
+                        <li><a href="#settings">Settings</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">FAQ</div>
+                    <ul class="sidebar-nav">
+                        <li><a href="#faq">Common Questions</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Troubleshooting</div>
+                    <ul class="sidebar-nav">
+                        <li><a href="#troubleshooting">Common Issues</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="main">
+                <h1>ahai Documentation</h1>
+                <p class="intro">
+                    ahai scans your markdown files and surfaces forward-looking
+                    concepts—ideas you've captured for later action. Everything
+                    runs locally on your Apple Silicon Mac using MLX.
+                </p>
+
+                <section id="getting-started">
+                    <h2 id="installation">Installation</h2>
+                    <div class="step">
+                        <p class="step-title">Download the app</p>
+                        <p class="step-desc">
+                            Get the DMG file from
+                            <a href="https://ahai.app">ahai.app</a>.
+                        </p>
+                    </div>
+                    <div class="step">
+                        <p class="step-title">Install</p>
+                        <p class="step-desc">
+                            Open the DMG file and drag ahai to your Applications
+                            folder.
+                        </p>
+                    </div>
+                    <div class="step">
+                        <p class="step-title">Launch</p>
+                        <p class="step-desc">
+                            Open ahai from your Applications folder or
+                            Spotlight.
+                        </p>
+                    </div>
+
+                    <h3 id="first-launch">First Launch</h3>
+                    <p>
+                        When you first open ahai, the app will request
+                        permission to access folders on your Mac. Grant this
+                        permission so ahai can scan your markdown files. Your
+                        data never leaves your machine—all processing happens
+                        locally.
+                    </p>
+
+                    <h3 id="starting-a-session">Starting a Session</h3>
+                    <div class="step">
+                        <p class="step-title">1. Click "New Session"</p>
+                        <p class="step-desc">
+                            Find this button in the main window.
+                        </p>
+                    </div>
+                    <div class="step">
+                        <p class="step-title">2. Select a folder</p>
+                        <p class="step-desc">
+                            Choose any folder containing markdown files—an
+                            Obsidian vault, a GitHub repo, exported notes, or
+                            any collection of .md files.
+                        </p>
+                    </div>
+                    <div class="step">
+                        <p class="step-title">3. Processing begins</p>
+                        <p class="step-desc">
+                            ahai automatically scans all markdown files in the
+                            folder and its subfolders. Progress is displayed in
+                            real-time.
+                        </p>
+                    </div>
+
+                    <h3 id="understanding-results">Understanding Results</h3>
+                    <p>
+                        Discovered ideas are displayed in a list. Each item
+                        shows the source file path, an excerpt from your note,
+                        and a confidence indicator showing how strongly the AI
+                        believes this is a forward-looking concept.
+                    </p>
+                </section>
+
+                <section id="features">
+                    <h2 id="session-management">Session Management</h2>
+                    <p>
+                        Sessions are saved automatically as you work. Resume any
+                        session from the session list in the sidebar. Each
+                        session tracks which files were processed and preserves
+                        your organization choices.
+                    </p>
+
+                    <h3 id="drag-drop">Drag-Drop Organization</h3>
+                    <p>
+                        Reorder discovered ideas by dragging them to new
+                        positions. Your custom order is preserved across
+                        sessions, letting you prioritize what matters most.
+                    </p>
+
+                    <h3 id="hide-items">Hide Items</h3>
+                    <p>
+                        Right-click any idea to hide it from view. Hidden items
+                        aren't deleted—restore them anytime from the View menu
+                        by selecting "Show Hidden Items."
+                    </p>
+
+                    <h3 id="search-filter">Search &amp; Filter</h3>
+                    <p>
+                        Use the search box at the top of the results list to
+                        filter ideas by keyword. Search matches against both the
+                        excerpt text and the source file path.
+                    </p>
+
+                    <h3 id="export">Export</h3>
+                    <p>Export your organized ideas in three formats:</p>
+                    <ul>
+                        <li>
+                            <strong>JSON</strong> — structured data for
+                            programmatic use
+                        </li>
+                        <li>
+                            <strong>CSV</strong> — spreadsheet-compatible format
+                        </li>
+                        <li>
+                            <strong>Markdown</strong> — human-readable list,
+                            ideal for pasting into notes
+                        </li>
+                    </ul>
+                    <p>
+                        Find export options in the File menu or use the keyboard
+                        shortcut <code>⌘E</code>.
+                    </p>
+
+                    <h3 id="settings">Settings</h3>
+                    <p>
+                        Open Preferences (<code>⌘,</code>) to configure the
+                        default output folder location and other options.
+                    </p>
+                </section>
+
+                <section id="faq">
+                    <h2>Frequently Asked Questions</h2>
+
+                    <div class="faq-item">
+                        <p class="faq-question">
+                            What is a forward-looking concept?
+                        </p>
+                        <p class="faq-answer">
+                            Ideas captured for future action: features to build,
+                            content to write, questions to research,
+                            improvements to make. These are the seeds of future
+                            work scattered throughout your notes.
+                        </p>
+                    </div>
+
+                    <div class="faq-item">
+                        <p class="faq-question">
+                            What file types does ahai scan?
+                        </p>
+                        <p class="faq-answer">
+                            Markdown files with the .md extension. This includes
+                            Obsidian vaults, GitHub repositories, Bear exports,
+                            Notion exports, and any other markdown files.
+                        </p>
+                    </div>
+
+                    <div class="faq-item">
+                        <p class="faq-question">Does my data leave my Mac?</p>
+                        <p class="faq-answer">
+                            No. All processing happens locally using Apple's MLX
+                            framework. There are no cloud services, no API
+                            calls, no data transmission. Your notes stay on your
+                            machine.
+                        </p>
+                    </div>
+
+                    <div class="faq-item">
+                        <p class="faq-question">
+                            What are the system requirements?
+                        </p>
+                        <p class="faq-answer">
+                            An Apple Silicon Mac (M1, M2, M3, or M4) running
+                            macOS 13 Ventura or later.
+                        </p>
+                    </div>
+
+                    <div class="faq-item">
+                        <p class="faq-question">How long does scanning take?</p>
+                        <p class="faq-answer">
+                            Processing time depends on the number of files. A
+                            few hundred files typically complete in 1–5 minutes.
+                            Progress is shown in real-time so you can monitor
+                            the scan.
+                        </p>
+                    </div>
+
+                    <div class="faq-item">
+                        <p class="faq-question">
+                            Can I disagree with what ahai found?
+                        </p>
+                        <p class="faq-answer">
+                            Absolutely. Hide any item you don't consider
+                            actionable. The AI surfaces candidates; you decide
+                            what matters. Your judgment is the final filter.
+                        </p>
+                    </div>
+
+                    <div class="faq-item">
+                        <p class="faq-question">Where are sessions stored?</p>
+                        <p class="faq-answer">
+                            In <code>~/Library/Application Support/ahai/</code>
+                        </p>
+                    </div>
+                </section>
+
+                <section id="troubleshooting">
+                    <h2>Troubleshooting</h2>
+
+                    <h3>App won't launch</h3>
+                    <p>
+                        Verify you're running an Apple Silicon Mac (M1/M2/M3/M4)
+                        with macOS 13 Ventura or later. Intel Macs are not
+                        supported.
+                    </p>
+                    <p>
+                        When Gatekeeper blocks the app, right-click the ahai
+                        icon and select "Open" from the context menu. Confirm
+                        the dialog to allow the app to run.
+                    </p>
+
+                    <h3>Processing seems stuck</h3>
+                    <p>
+                        Large folders with thousands of files take time to
+                        process. Check the progress indicator to confirm
+                        scanning is still active. You can cancel the current
+                        session and resume later—progress is saved
+                        automatically.
+                    </p>
+                </section>
+            </main>
+        </div>
+
+        <script>
+            // Mobile sidebar toggle
+            function toggleSidebar() {
+                document.getElementById("sidebar").classList.toggle("open");
+                document
+                    .querySelector(".sidebar-overlay")
+                    .classList.toggle("open");
+            }
+
+            // Close sidebar when clicking a link on mobile
+            document.querySelectorAll(".sidebar-nav a").forEach((link) => {
+                link.addEventListener("click", () => {
+                    if (window.innerWidth <= 768) {
+                        toggleSidebar();
+                    }
+                });
+            });
+
+            // Highlight current section in sidebar
+            const sections = document.querySelectorAll(
+                "section[id], h2[id], h3[id]"
+            );
+            const navLinks = document.querySelectorAll(".sidebar-nav a");
+
+            function highlightNav() {
+                let current = "";
+                const scrollPos = window.scrollY + 100;
+
+                sections.forEach((section) => {
+                    const sectionTop = section.offsetTop;
+                    if (scrollPos >= sectionTop) {
+                        current = section.getAttribute("id");
+                    }
+                });
+
+                navLinks.forEach((link) => {
+                    link.classList.remove("active");
+                    if (link.getAttribute("href") === "#" + current) {
+                        link.classList.add("active");
+                    }
+                });
+            }
+
+            window.addEventListener("scroll", highlightNav);
+            highlightNav();
+        </script>
+    </body>
+</html>

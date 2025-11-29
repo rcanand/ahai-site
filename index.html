@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ahai – Rediscover what you meant to do</title>
+        <meta
+            name="description"
+            content="ahai scans your markdown files and surfaces ideas you captured for later but never acted on. Local AI on Apple Silicon, completely private."
+        />
+        <style>
+            :root {
+                --bg: #fafafa;
+                --bg-subtle: #f0f0f0;
+                --text: #1a1a1a;
+                --text-muted: #666;
+                --text-subtle: #888;
+                --accent: #2563eb;
+                --accent-hover: #1d4ed8;
+                --accent-subtle: #dbeafe;
+                --border: #e5e5e5;
+                --card-bg: #fff;
+                --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+                --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --bg: #0a0a0a;
+                    --bg-subtle: #141414;
+                    --text: #f0f0f0;
+                    --text-muted: #a0a0a0;
+                    --text-subtle: #707070;
+                    --accent: #3b82f6;
+                    --accent-hover: #60a5fa;
+                    --accent-subtle: #1e3a5f;
+                    --border: #252525;
+                    --card-bg: #111;
+                    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+                    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+                }
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                    Helvetica, Arial, sans-serif, "Apple Color Emoji",
+                    "Segoe UI Emoji";
+                background: var(--bg);
+                color: var(--text);
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+
+            /* Layout */
+            .container {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 0 24px;
+            }
+
+            section {
+                padding: 80px 0;
+            }
+
+            @media (max-width: 640px) {
+                section {
+                    padding: 56px 0;
+                }
+            }
+
+            /* Typography */
+            h1,
+            h2,
+            h3 {
+                font-weight: 600;
+                letter-spacing: -0.02em;
+                line-height: 1.2;
+            }
+
+            h1 {
+                font-size: clamp(2.5rem, 6vw, 3.5rem);
+            }
+
+            h2 {
+                font-size: clamp(1.75rem, 4vw, 2.25rem);
+                margin-bottom: 24px;
+            }
+
+            h3 {
+                font-size: 1.125rem;
+                margin-bottom: 8px;
+            }
+
+            p {
+                color: var(--text-muted);
+            }
+
+            .lead {
+                font-size: 1.25rem;
+                line-height: 1.5;
+            }
+
+            /* Buttons */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 14px 28px;
+                font-size: 1rem;
+                font-weight: 500;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: all 0.15s ease;
+            }
+
+            .btn-primary {
+                background: var(--accent);
+                color: #fff;
+            }
+
+            .btn-primary:hover {
+                background: var(--accent-hover);
+                transform: translateY(-1px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .btn-secondary {
+                background: var(--bg-subtle);
+                color: var(--text);
+                border: 1px solid var(--border);
+            }
+
+            .btn-secondary:hover {
+                border-color: var(--text-subtle);
+            }
+
+            /* Header */
+            header {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: var(--bg);
+                border-bottom: 1px solid var(--border);
+            }
+
+            nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 64px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--text);
+                text-decoration: none;
+                letter-spacing: -0.03em;
+            }
+
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 32px;
+            }
+
+            .nav-links a {
+                color: var(--text-muted);
+                text-decoration: none;
+                font-size: 0.9375rem;
+                transition: color 0.15s;
+            }
+
+            .nav-links a:hover {
+                color: var(--text);
+            }
+
+            @media (max-width: 640px) {
+                .nav-links {
+                    gap: 20px;
+                }
+                .nav-links .hide-mobile {
+                    display: none;
+                }
+            }
+
+            /* Hero */
+            .hero {
+                padding: 100px 0 80px;
+                text-align: center;
+            }
+
+            .hero-logo {
+                width: 96px;
+                height: 96px;
+                margin: 0 auto 32px;
+                background: var(--bg-subtle);
+                border-radius: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.5rem;
+                border: 1px solid var(--border);
+            }
+
+            .hero-logo img {
+                width: 100%;
+                height: 100%;
+                border-radius: 24px;
+                object-fit: cover;
+            }
+
+            .tagline {
+                color: var(--accent);
+                font-size: 0.875rem;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                margin-bottom: 16px;
+            }
+
+            .hero h1 {
+                margin-bottom: 24px;
+            }
+
+            .hero .lead {
+                max-width: 600px;
+                margin: 0 auto 40px;
+            }
+
+            .hero-buttons {
+                display: flex;
+                gap: 16px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 24px;
+                padding: 8px 16px;
+                background: var(--bg-subtle);
+                border-radius: 100px;
+                font-size: 0.8125rem;
+                color: var(--text-muted);
+                border: 1px solid var(--border);
+            }
+
+            .badge svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            /* Problem */
+            .problem {
+                background: var(--bg-subtle);
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .problem-content {
+                max-width: 680px;
+                margin: 0 auto;
+                text-align: center;
+            }
+
+            .problem h2 {
+                color: var(--text);
+            }
+
+            .problem p {
+                font-size: 1.125rem;
+            }
+
+            blockquote {
+                margin: 32px 0;
+                padding: 24px 32px;
+                background: var(--card-bg);
+                border-left: 3px solid var(--accent);
+                border-radius: 0 8px 8px 0;
+                font-style: italic;
+                color: var(--text-muted);
+            }
+
+            /* Solution */
+            .solution-content {
+                max-width: 680px;
+                margin: 0 auto;
+                text-align: center;
+            }
+
+            .solution p {
+                font-size: 1.125rem;
+            }
+
+            /* Features */
+            .features {
+                background: var(--bg-subtle);
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .features h2 {
+                text-align: center;
+                margin-bottom: 48px;
+            }
+
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+
+            @media (max-width: 800px) {
+                .features-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 540px) {
+                .features-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .feature-card {
+                padding: 28px;
+                background: var(--card-bg);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                transition: box-shadow 0.15s, transform 0.15s;
+            }
+
+            .feature-card:hover {
+                box-shadow: var(--shadow-lg);
+                transform: translateY(-2px);
+            }
+
+            .feature-icon {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 16px;
+                background: var(--accent-subtle);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--accent);
+            }
+
+            .feature-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .feature-card p {
+                font-size: 0.9375rem;
+                line-height: 1.5;
+            }
+
+            /* Screenshots */
+            .screenshots h2 {
+                text-align: center;
+                margin-bottom: 48px;
+            }
+
+            .screenshots-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+
+            @media (max-width: 640px) {
+                .screenshots-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .screenshot-placeholder {
+                aspect-ratio: 16/10;
+                background: var(--bg-subtle);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-subtle);
+                font-size: 0.875rem;
+                overflow: hidden;
+            }
+
+            .screenshot-placeholder img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            /* Pricing */
+            .pricing {
+                background: var(--bg-subtle);
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .pricing-card {
+                max-width: 480px;
+                margin: 0 auto;
+                padding: 48px;
+                background: var(--card-bg);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                text-align: center;
+                box-shadow: var(--shadow-lg);
+            }
+
+            .pricing h2 {
+                margin-bottom: 8px;
+            }
+
+            .pricing-subtitle {
+                color: var(--text-muted);
+                margin-bottom: 32px;
+            }
+
+            .price-display {
+                margin-bottom: 32px;
+            }
+
+            .price-main {
+                font-size: 3rem;
+                font-weight: 700;
+                color: var(--text);
+                letter-spacing: -0.03em;
+            }
+
+            .price-note {
+                color: var(--text-subtle);
+                font-size: 0.9375rem;
+                margin-top: 8px;
+            }
+
+            .pricing-details {
+                margin: 24px 0 32px;
+                padding: 20px;
+                background: var(--bg-subtle);
+                border-radius: 8px;
+                font-size: 0.9375rem;
+                color: var(--text-muted);
+            }
+
+            .pricing .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Footer */
+            footer {
+                padding: 48px 0;
+                border-top: 1px solid var(--border);
+            }
+
+            .footer-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 24px;
+            }
+
+            .footer-links {
+                display: flex;
+                gap: 24px;
+            }
+
+            .footer-links a {
+                color: var(--text-muted);
+                text-decoration: none;
+                font-size: 0.9375rem;
+                transition: color 0.15s;
+            }
+
+            .footer-links a:hover {
+                color: var(--text);
+            }
+
+            .copyright {
+                color: var(--text-subtle);
+                font-size: 0.875rem;
+            }
+
+            @media (max-width: 540px) {
+                .footer-content {
+                    flex-direction: column;
+                    text-align: center;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav class="container">
+                <a href="/" class="logo">ahai</a>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="/docs" class="hide-mobile">Docs</a>
+                    <a href="[GUMROAD_URL]" class="btn btn-primary">Download</a>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Hero -->
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-logo">
+                        <!-- Replace with: <img src="logo.png" alt="ahai logo"> -->
+                        ⚡
+                    </div>
+                    <div class="tagline">For Mac • Apple Silicon</div>
+                    <h1>Rediscover what you<br />meant to do</h1>
+                    <p class="lead">
+                        ahai scans your markdown files and surfaces ideas you
+                        captured for later but never acted on—unbuilt features,
+                        unwritten content, unexplored research questions buried
+                        in your notes.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="[GUMROAD_URL]" class="btn btn-primary">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                                />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            Download for Mac
+                        </a>
+                        <a href="/docs" class="btn btn-secondary"
+                            >Read the Docs</a
+                        >
+                    </div>
+                    <div class="badge">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <rect
+                                x="3"
+                                y="11"
+                                width="18"
+                                height="11"
+                                rx="2"
+                                ry="2"
+                            />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        100% local processing • Your notes never leave your Mac
+                    </div>
+                </div>
+            </section>
+
+            <!-- Problem -->
+            <section class="problem">
+                <div class="container">
+                    <div class="problem-content">
+                        <h2>
+                            Your notes are full of<br />"someday" and "maybe"
+                        </h2>
+                        <p>
+                            You're diligent about capturing ideas. Feature
+                            concepts, blog post drafts, research threads, things
+                            to explore when you have time. They go into your
+                            notes, tagged or linked, filed away with good
+                            intentions.
+                        </p>
+                        <blockquote>
+                            "I should try building that..." "Would be
+                            interesting to explore..." "TODO: come back to this"
+                        </blockquote>
+                        <p>
+                            But your note collection grows. Those
+                            forward-looking ideas get buried under meeting
+                            notes, project docs, and daily logs. The promising
+                            threads fade into the archive. Six months later, you
+                            rediscover them by accident—or you don't.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Solution -->
+            <section class="solution">
+                <div class="container">
+                    <div class="solution-content">
+                        <h2>Surface what's been waiting</h2>
+                        <p>
+                            ahai uses local AI to read your markdown files and
+                            identify forward-looking concepts—ideas, intentions,
+                            and possibilities you captured but never acted on.
+                            It understands context, not just keywords. "Might be
+                            worth exploring" gets surfaced. Meeting minutes
+                            don't.
+                        </p>
+                        <p style="margin-top: 24px">
+                            Point it at your Obsidian vault, a GitHub repo, or
+                            any folder of markdown. In minutes, you'll have a
+                            curated list of your own forgotten ideas, ready to
+                            review, organize, and finally do something with.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="features" id="features">
+                <div class="container">
+                    <h2>Built for how you work</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <rect
+                                        x="3"
+                                        y="11"
+                                        width="18"
+                                        height="11"
+                                        rx="2"
+                                        ry="2"
+                                    />
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                </svg>
+                            </div>
+                            <h3>Local AI Processing</h3>
+                            <p>
+                                Runs entirely on your Mac using MLX. Your notes
+                                are analyzed locally—nothing is sent to the
+                                cloud, ever.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path
+                                        d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"
+                                    />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
+                            </div>
+                            <h3>Works with Your Tools</h3>
+                            <p>
+                                Compatible with Obsidian vaults, GitHub repos,
+                                or any folder of markdown files. No config
+                                needed.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                            </div>
+                            <h3>Session Management</h3>
+                            <p>
+                                Pause and resume scans anytime. Pick up where
+                                you left off without re-processing your entire
+                                vault.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <polyline points="5 9 2 12 5 15" />
+                                    <polyline points="9 5 12 2 15 5" />
+                                    <polyline points="15 19 12 22 9 19" />
+                                    <polyline points="19 9 22 12 19 15" />
+                                    <line x1="2" y1="12" x2="22" y2="12" />
+                                    <line x1="12" y1="2" x2="12" y2="22" />
+                                </svg>
+                            </div>
+                            <h3>Drag-Drop Organization</h3>
+                            <p>
+                                Review surfaced ideas and organize them with
+                                simple drag-and-drop. Keep, dismiss, or
+                                categorize as you go.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path
+                                        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                                    />
+                                    <polyline points="14 2 14 8 20 8" />
+                                    <line x1="16" y1="13" x2="8" y2="13" />
+                                    <line x1="16" y1="17" x2="8" y2="17" />
+                                    <polyline points="10 9 9 9 8 9" />
+                                </svg>
+                            </div>
+                            <h3>Multiple Export Formats</h3>
+                            <p>
+                                Export your curated ideas to markdown, CSV, or
+                                JSON. Take them wherever your workflow goes.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                                    <path d="M2 17l10 5 10-5" />
+                                    <path d="M2 12l10 5 10-5" />
+                                </svg>
+                            </div>
+                            <h3>Apple Silicon Optimized</h3>
+                            <p>
+                                Native performance on M1/M2/M3/M4 Macs. Fast
+                                inference without draining your battery.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screenshots -->
+            <section class="screenshots">
+                <div class="container">
+                    <h2>See it in action</h2>
+                    <div class="screenshots-grid">
+                        <div class="screenshot-placeholder">
+                            <!-- Replace with: <img src="screenshot-1.png" alt="ahai main interface"> -->
+                            Screenshot 1
+                        </div>
+                        <div class="screenshot-placeholder">
+                            <!-- Replace with: <img src="screenshot-2.png" alt="ahai scan results"> -->
+                            Screenshot 2
+                        </div>
+                        <div class="screenshot-placeholder">
+                            <!-- Replace with: <img src="screenshot-3.png" alt="ahai organization view"> -->
+                            Screenshot 3
+                        </div>
+                        <div class="screenshot-placeholder">
+                            <!-- Replace with: <img src="screenshot-4.png" alt="ahai export options"> -->
+                            Screenshot 4
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing -->
+            <section class="pricing" id="pricing">
+                <div class="container">
+                    <div class="pricing-card">
+                        <h2>Pay what you want</h2>
+                        <p class="pricing-subtitle">
+                            Simple, fair pricing for indie software
+                        </p>
+                        <div class="price-display">
+                            <div class="price-main">$19+</div>
+                            <div class="price-note">$29 suggested</div>
+                        </div>
+                        <div class="pricing-details">
+                            One-time purchase. No subscription. All future
+                            updates included.
+                        </div>
+                        <a href="[GUMROAD_URL]" class="btn btn-primary">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                                />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            Get ahai on Gumroad
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-links">
+                        <a href="/docs">Documentation</a>
+                        <a href="https://github.com/mlai-llc/ahai">GitHub</a>
+                        <a href="mailto:hello@mlai.dev">Contact</a>
+                    </div>
+                    <div class="copyright">© 2025 MLAI LLC</div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
